@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>葉揚 | 個人網站</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #34495e;
+            --accent-color: #3498db;
+            --background-color: #ecf0f1;
+            --text-color: #333333;
+            --light-text-color: #f8f8f8;
+            --border-color: #bdc3c7;
+            --edit-color: #f39c12;
+            --confirm-color: #2ecc71;
+            --upload-color: #e74c3c;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            -webkit-font-smoothing: antialiased;
+            scroll-behavior: smooth;
+        }
+
+        header {
+            background: var(--primary-color);
+            color: var(--light-text-color);
+            padding: 80px 0 60px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        header h1 {
+            font-size: 3em;
+            margin: 0;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+        }
+        header p {
+            font-size: 1.3em;
+            font-weight: 400;
+            margin-top: 10px;
+            opacity: 0.9;
+        }
+
+        nav {
+            background: var(--secondary-color);
+            display: flex;
+            justify-content: center;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        nav a {
+            color: var(--light-text-color);
+            padding: 18px 25px;
+            text-decoration: none;
+            display: block;
+            font-weight: 600;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+        nav a:hover {
+            background: var(--accent-color);
+            color: #ffffff;
+        }
+
+        section {
+            padding: 50px;
+            max-width: 1000px;
+            margin: 30px auto;
+            background: #fff;
+            border-radius: 12px;
+            position: relative;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        section:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+        }
+        h2 {
+            font-size: 2em;
+            font-weight: 700;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+        h3 {
+            font-size: 1.5em;
+            font-weight: 600;
+            margin-top: 30px;
+            margin-bottom: 15px;
+        }
+        p {
+            margin-bottom: 15px;
+            line-height: 1.8;
+        }
+
+        .profile-container {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            gap: 40px;
+        }
+        .profile-photo-wrapper {
+            flex: 0 0 200px;
+            text-align: center;
+            position: relative;
+            margin: 0;
+        }
+        .profile-photo {
+            width: 180px;
+            height: 240px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+            margin: 0 auto;
+        }
+        .profile-photo img {
+            max-width: none;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            cursor: move;
+            transform: translate(0px, 0px) scale(1);
+            position: absolute;
+            left: 0; top: 0;
+        }
+        .profile-info {
+            flex: 1;
+            min-width: 300px;
+            padding: 0;
+        }
+        .profile-info table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        .profile-info td {
+            padding: 12px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .profile-info tr:last-child td {
+            border-bottom: none;
+        }
+        .profile-info strong {
+            color: var(--primary-color);
+            min-width: 80px;
+            display: inline-block;
+        }
+
+        footer {
+            text-align: center;
+            padding: 30px;
+            background: var(--primary-color);
+            color: var(--light-text-color);
+            margin-top: 30px;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        }
+        .editable {
+            border: 1px solid transparent;
+            border-radius: 4px;
+            padding: 2px 5px;
+            transition: all 0.2s ease;
+        }
+        .editable:focus {
+            outline: 2px solid var(--accent-color);
+            border-color: var(--accent-color);
+            background-color: #fdfdfd;
+        }
+
+        .btn-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+        }
+        .action-btn {
+            padding: 10px 18px;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            font-weight: 600;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+        }
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .edit-btn { background-color: var(--edit-color); }
+        .confirm-btn { background-color: var(--confirm-color); display: none; }
+        .upload-photo-btn {
+            display: none;
+            margin: 20px auto 15px;
+            padding: 12px 25px;
+            background-color: var(--upload-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            z-index: 10;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .upload-photo-btn:hover { 
+            background-color: #c0392b; 
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        #photo-upload-input { display: none; }
+        
+        .photo-edit-actions {
+            margin-top: 15px;
+            display: none;
+            position: relative;
+            z-index: 10;
+            text-align: center;
+        }
+        .photo-edit-actions .action-btn {
+            margin: 0 8px;
+        }
+        .photo-edit-btn { background-color: var(--edit-color); }
+        .photo-confirm-btn { background-color: var(--confirm-color); }
+
+        /* 分享按鈕和彈窗樣式 */
+        .share-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            padding: 15px 30px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1.1em;
+            font-weight: 600;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+            z-index: 100;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .share-btn:hover {
+            transform: translateY(-3px) scale(1.03);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+        .share-modal {
+            display: none;
+            position: fixed;
+            z-index: 200;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(5px);
+        }
+        .share-modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 30px;
+            border: none;
+            width: 80%;
+            max-width: 450px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            animation: fadeIn 0.3s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .share-modal-content h3 {
+            margin-top: 0;
+            font-size: 1.6em;
+            color: var(--primary-color);
+        }
+        .share-modal-content button {
+            display: block;
+            width: 85%;
+            margin: 15px auto;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.05em;
+            color: white;
+            font-weight: 600;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+        }
+        .share-modal-content button:hover {
+            transform: translateY(-2px) scale(1.02);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            opacity: 0.9;
+        }
+        .close-btn {
+            color: #888;
+            float: right;
+            font-size: 30px;
+            font-weight: normal;
+            cursor: pointer;
+            line-height: 1;
+            transition: color 0.2s ease;
+        }
+        .close-btn:hover,
+        .close-btn:focus {
+            color: #333;
+            text-decoration: none;
+        }
+        .messenger-btn { background-color: #0078FF; }
+        .ig-btn { background-image: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
+        .copy-link-btn { background-color: #555; }
+
+        /* 連結樣式優化 */
+        a {
+            color: var(--accent-color);
+            text-decoration: none;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background-color: var(--accent-color);
+            transition: width 0.3s ease;
+        }
+        a:hover {
+            color: #2980b9;
+        }
+        a:hover::after {
+            width: 100%;
+        }
+
+        /* 響應式設計 */
+        @media (max-width: 768px) {
+            header {
+                padding: 60px 0 40px;
+            }
+            header h1 {
+                font-size: 2.2em;
+            }
+            header p {
+                font-size: 1em;
+            }
+            nav a {
+                padding: 14px 15px;
+                font-size: 0.9em;
+            }
+            section {
+                padding: 30px;
+                margin: 20px auto;
+            }
+            h2 {
+                font-size: 1.6em;
+            }
+            .profile-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .profile-photo-wrapper {
+                flex: none;
+                width: 100%;
+            }
+            .profile-info {
+                padding: 0;
+                min-width: unset;
+                width: 100%;
+            }
+            .btn-container {
+                position: static;
+                display: flex;
+                justify-content: flex-end;
+                margin-bottom: 15px;
+            }
+            .share-btn {
+                bottom: 20px;
+                right: 20px;
+                padding: 12px 25px;
+                font-size: 1em;
+            }
+            .share-modal-content {
+                margin: 10% auto;
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="main-content">
+        <header>
+            <h1 id="header-title" class="editable" contenteditable="false">葉揚</h1>
+            <p id="header-subtitle" class="editable" contenteditable="false">國立臺灣師範大學 | 科技系學生</p>
+            <div class="btn-container">
+                <button class="action-btn edit-btn" data-section="header">編輯</button>
+                <button class="action-btn confirm-btn" data-section="header">確認</button>
+            </div>
+        </header>
+
+        <nav>
+            <a href="#profile">個人資料</a>
+            <a href="#about">關於我</a>
+            <a href="#projects">作品集</a>
+            <a href="#contact">聯絡我</a>
+        </nav>
+
+        <section id="profile">
+            <div class="btn-container">
+                <button class="action-btn edit-btn" data-section="profile">編輯</button>
+                <button class="action-btn confirm-btn" data-section="profile">確認</button>
+            </div>
+            <h2>個人資料</h2>
+            <div class="profile-container">
+                <div class="profile-photo-wrapper">
+                    <div class="profile-photo">
+                        <img id="profile-img" src="42d4eca1-c71d-4b05-85eb-9ed8eaf3340b.jpg" alt="葉揚個人照片">
+                    </div>
+                    <button class="upload-photo-btn" id="upload-photo-btn" onclick="document.getElementById('photo-upload-input').click();">上傳照片</button>
+                    <input type="file" id="photo-upload-input" accept="image/*">
+                    
+                    <div class="photo-edit-actions" id="photo-actions">
+                        <button class="action-btn photo-edit-btn" onclick="togglePhotoEdit(true)">調整照片</button>
+                        <button class="action-btn photo-confirm-btn" onclick="togglePhotoEdit(false)" style="display: none;">確認照片</button>
+                    </div>
+                </div>
+                <div class="profile-info">
+                    <table>
+                        <tr><td><strong>姓名：</strong></td><td id="name" class="editable" contenteditable="false">葉揚</td></tr>
+                        <tr><td><strong>系級：</strong></td><td id="education" class="editable" contenteditable="false">國立臺灣師範大學 科技系 117 級</td></tr>
+                        <tr><td><strong>社團：</strong></td><td id="clubs" class="editable" contenteditable="false">台師大馬來西亞同學會、手工藝設計研究社</td></tr>
+                        <tr><td><strong>國際：</strong></td><td id="international" class="editable" contenteditable="false">馬來西亞</td></tr>
+                        <tr><td><strong>所在地：</strong></td><td id="location" class="editable" contenteditable="false">台北市，台灣</td></tr>
+                    </table>
+                </div>
+            </div>
+            <h3>自我介紹</h3>
+            <p id="bio" class="editable" contenteditable="false">
+                嗨！我是<strong>葉揚</strong>，一位就讀於國立臺灣師範大學科技系的學生。我對科技充滿熱情，並在學習過程中不斷探索新知，也同時將自己的創意應用於實際的專案中。除了課業之外，我熱衷於參與不同的社團，讓我的大學生活更豐富。
+            </p>
+        </section>
+
+        <section id="about">
+            <div class="btn-container">
+                <button class="action-btn edit-btn" data-section="about">編輯</button>
+                <button class="action-btn confirm-btn" data-section="about">確認</button>
+            </div>
+            <h2>關於我</h2>
+            <p id="about-text-1" class="editable" contenteditable="false">
+                在<strong>台師大馬來西亞同學會</strong>，我學習共同策劃和執行多項活動。這段經歷不僅提升了我的組織能力，也讓我更懂得團隊合作的重要性。
+            </p>
+            <p id="about-text-2" class="editable" contenteditable="false">
+                而在<strong>手工藝設計研究社</strong>，做為社長，組織團隊，分配工作，同時也讓社課變得更有趣，對我來説都是一個有挑戰性的任務；同時提升自己的手作能力，耐心等。
+            </p>
+        </section>
+
+        <section id="projects">
+            <div class="btn-container">
+                <button class="action-btn edit-btn" data-section="projects">編輯</button>
+                <button class="action-btn confirm-btn" data-section="projects">確認</button>
+            </div>
+            <h2>作品集</h2>
+            <p id="projects-text" class="editable" contenteditable="false">
+                這裡將展示我的專案和作品。無論是課堂上的程式設計專案、社團活動的設計成果，或是個人興趣的創作，都將在這裡與你分享。請持續關注，未來會陸續更新！
+            </p>
+        </section>
+
+        <section id="contact">
+            <div class="btn-container">
+                <button class="action-btn edit-btn" data-section="contact">編輯</button>
+                <button class="action-btn confirm-btn" data-section="contact">確認</button>
+            </div>
+            <h2>聯絡我</h2>
+            <p id="contact-text" class="editable" contenteditable="false">
+                如果你對我的經歷或作品感興趣，歡迎隨時透過以下方式與我聯繫：
+            </p>
+            <ul id="contact-list" class="editable" contenteditable="false">
+                <li><strong>Email:</strong> <a href="mailto:yapyang040527@gmail.com" id="contact-email">yapyang040527@gmail.com</a></li>
+                <li><strong>GitHub:</strong> <a href="https://github.com/yapyang040527/yang-repository" id="contact-github">yapyang040527/yang-repository</a></li>
+                <li><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/yap-yang" id="contact-linkedin">www.linkedin.com/in/yap-yang</a></li>
+            </ul>
+        </section>
+
+        <footer>
+            <p id="footer-text" class="editable" contenteditable="false">© 2025 葉揚. All rights reserved.</p>
+            <div class="btn-container">
+                <button class="action-btn edit-btn" data-section="footer">編輯</button>
+                <button class="action-btn confirm-btn" data-section="footer">確認</button>
+            </div>
+        </footer>
+    </div>
+
+    <button class="share-btn" onclick="openShareModal()">分享</button>
+
+    <div id="shareModal" class="share-modal">
+        <div class="share-modal-content">
+            <span class="close-btn" onclick="closeShareModal()">&times;</span>
+            <h3>分享我的個人網站</h3>
+            <button class="messenger-btn" onclick="shareToMessenger()">分享到 Messenger</button>
+            <button class="ig-btn" onclick="shareToInstagram()">分享到 Instagram</button>
+            <button class="copy-link-btn" onclick="copyLink()">複製網址</button>
+        </div>
+    </div>
+
+    <script>
+        // --- 圖片上傳與編輯功能 ---
+        const photoUploadInput = document.getElementById('photo-upload-input');
+        const profileImg = document.getElementById('profile-img');
+        const uploadPhotoBtn = document.getElementById('upload-photo-btn');
+        const photoActions = document.getElementById('photo-actions');
+        const photoEditBtn = photoActions.querySelector('.photo-edit-btn');
+        const photoConfirmBtn = photoActions.querySelector('.photo-confirm-btn');
+
+        let isDragging = false;
+        let startX, startY;
+        let imgX = 0, imgY = 0;
+        let scale = 1;
+
+        // 輔助函式：從transform字串解析出x, y, scale值
+        function getTransformValues(transformString) {
+            const matrix = new DOMMatrixReadOnly(transformString);
+            return { x: matrix.m41, y: matrix.m42, scale: matrix.a }; // m41=translateX, m42=translateY, a=scaleX
+        }
+
+        // 輔助函式：設定圖片的x, y, scale
+        function setImgTransform(imgElement, x, y, scale) {
+            imgElement.style.transform = `translate(${x}px, ${y}px) scale(${scale})`;
+            imgX = x;
+            imgY = y;
+            this.scale = scale; // 更新全局scale變量
+        }
+
+
+        photoUploadInput.addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    profileImg.src = e.target.result;
+                    // 重置圖片位置和縮放
+                    setImgTransform(profileImg, 0, 0, 1);
+                    togglePhotoEdit(true);
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        profileImg.addEventListener('mousedown', (e) => {
+            if (profileImg.dataset.editing === 'true') {
+                isDragging = true;
+                const currentTransform = getTransformValues(profileImg.style.transform);
+                startX = e.clientX - currentTransform.x;
+                startY = e.clientY - currentTransform.y;
+                e.preventDefault();
+            }
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (isDragging) {
+                imgX = e.clientX - startX;
+                imgY = e.clientY - startY;
+                profileImg.style.transform = `translate(${imgX}px, ${imgY}px) scale(${scale})`;
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+
+        profileImg.addEventListener('wheel', (e) => {
+            if (profileImg.dataset.editing === 'true') {
+                e.preventDefault();
+                const zoomSpeed = 0.1;
+                if (e.deltaY < 0) { // 滾輪向上放大
+                    scale += zoomSpeed;
+                } else { // 滾輪向下縮小
+                    scale -= zoomSpeed;
+                }
+                scale = Math.max(0.5, Math.min(3.0, scale)); // 限制縮放範圍
+                profileImg.style.transform = `translate(${imgX}px, ${imgY}px) scale(${scale})`;
+            }
+        });
+
+        function togglePhotoEdit(enable) {
+            if (enable) {
+                profileImg.dataset.editing = 'true';
+                profileImg.style.cursor = 'move';
+                photoEditBtn.style.display = 'none';
+                photoConfirmBtn.style.display = 'inline-block';
+            } else {
+                profileImg.dataset.editing = 'false';
+                profileImg.style.cursor = 'default';
+                photoEditBtn.style.display = 'inline-block';
+                photoConfirmBtn.style.display = 'none';
+            }
+        }
+        
+        // --- 區塊文字編輯與確認功能 + Undo 功能 ---
+        const isViewMode = new URLSearchParams(window.location.search).get('view') === 'true';
+
+        let history = [];
+        let currentStateIndex = -1;
+
+        function saveState() {
+            const state = {};
+            document.querySelectorAll('.editable').forEach(el => {
+                state[el.id] = el.innerHTML;
+            });
+            // 儲存圖片的 src 和 transform
+            state['profile-img'] = { 
+                src: profileImg.src, 
+                transform: profileImg.style.transform || 'translate(0px, 0px) scale(1)' // 確保有默認值
+            };
+
+            history.splice(currentStateIndex + 1); // 刪除當前之後的重做歷史
+            history.push(state);
+            currentStateIndex++;
+            console.log('State saved. History length:', history.length, 'Current index:', currentStateIndex);
+        }
+
+        function restoreState(index) {
+            if (index >= 0 && index < history.length) {
+                const state = history[index];
+                document.querySelectorAll('.editable').forEach(el => {
+                    if (state[el.id] !== undefined) {
+                        el.innerHTML = state[el.id];
+                    }
+                });
+
+                // 恢復圖片狀態
+                if (state['profile-img']) {
+                    const imgState = state['profile-img'];
+                    profileImg.src = imgState.src;
+                    profileImg.style.transform = imgState.transform;
+                    // 更新全局變量以便繼續編輯
+                    const currentTransform = getTransformValues(imgState.transform);
+                    imgX = currentTransform.x;
+                    imgY = currentTransform.y;
+                    scale = currentTransform.scale;
+                }
+                updateLinks();
+                console.log('State restored to index:', index);
+            }
+        }
+
+        function toggleSectionEdit(sectionId, enableEdit) {
+            if (isViewMode) return;
+
+            const section = document.getElementById(sectionId);
+            const editableElements = section.querySelectorAll('.editable');
+            const editBtn = section.querySelector('.edit-btn');
+            const confirmBtn = section.querySelector('.confirm-btn');
+        
+            if (editableElements) {
+                editableElements.forEach(el => {
+                    el.setAttribute('contenteditable', enableEdit);
+                    el.style.border = enableEdit ? '1px solid #ccc' : '1px solid transparent';
+                });
+            }
+
+            if (editBtn && confirmBtn) {
+                editBtn.style.display = enableEdit ? 'none' : 'inline-block';
+                confirmBtn.style.display = enableEdit ? 'inline-block' : 'none';
+            }
+
+            if (sectionId === 'profile') {
+                uploadPhotoBtn.style.display = enableEdit ? 'block' : 'none';
+                photoActions.style.display = enableEdit ? 'block' : 'none';
+                if (!enableEdit) { // 從編輯模式切換回非編輯模式時
+                    togglePhotoEdit(false); // 關閉圖片調整模式
+                    saveState(); // 儲存當前狀態
+                }
+            } else if (!enableEdit) { // 其他區塊從編輯模式切換回非編輯模式時
+                saveState(); // 儲存當前狀態
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', () => {
+            const editButtons = document.querySelectorAll('.edit-btn, .confirm-btn');
+            const shareButton = document.querySelector('.share-btn');
+            const uploadPhotoBtn = document.getElementById('upload-photo-btn');
+            const photoActions = document.getElementById('photo-actions');
+
+            if (isViewMode) {
+                document.querySelectorAll('.editable').forEach(el => {
+                    el.setAttribute('contenteditable', 'false');
+                    el.style.border = '1px solid transparent';
+                });
+                editButtons.forEach(btn => btn.style.display = 'none');
+                if (uploadPhotoBtn) uploadPhotoBtn.style.display = 'none';
+                if (shareButton) shareButton.style.display = 'none';
+                if (photoActions) photoActions.style.display = 'none';
+            } else {
+                document.querySelectorAll('.editable').forEach(el => {
+                    el.addEventListener('input', updateLinks);
+                    el.setAttribute('contenteditable', 'false');
+                    el.style.border = '1px solid transparent';
+                });
+                document.querySelectorAll('.btn-container').forEach(container => {
+                    const editBtn = container.querySelector('.edit-btn');
+                    const confirmBtn = container.querySelector('.confirm-btn');
+                    const sectionId = editBtn.dataset.section;
+                    if (editBtn) editBtn.addEventListener('click', () => toggleSectionEdit(sectionId, true));
+                    if (confirmBtn) confirmBtn.addEventListener('click', () => toggleSectionEdit(sectionId, false));
+                });
+                saveState(); // 儲存初始狀態
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'z' && currentStateIndex > 0) {
+                e.preventDefault();
+                currentStateIndex--;
+                restoreState(currentStateIndex);
+            }
+        });
+
+        function updateLinks() {
+            const contactSection = document.getElementById('contact');
+            if (!contactSection) return;
+
+            const contactEmail = document.getElementById('contact-email');
+            const contactGithub = document.getElementById('contact-github');
+            const contactLinkedin = document.getElementById('contact-linkedin');
+            
+            if (contactEmail) {
+                const emailText = contactEmail.textContent.trim();
+                contactEmail.href = `mailto:${emailText}`;
+            }
+            if (contactGithub) {
+                const githubText = contactGithub.textContent.trim();
+                const fullUrl = githubText.startsWith('https://') ? githubText : `https://github.com/${githubText}`;
+                contactGithub.href = fullUrl;
+            }
+            if (contactLinkedin) {
+                const linkedinText = contactLinkedin.textContent.trim();
+                const fullUrl = linkedinText.startsWith('https://') ? linkedinText : `https://www.linkedin.com/in/${linkedinText}`;
+                contactLinkedin.href = fullUrl;
+            }
+        }
+
+        // --- 分享功能相關程式碼 ---
+        const shareModal = document.getElementById('shareModal');
+
+        function openShareModal() {
+            shareModal.style.display = 'block';
+        }
+
+        function closeShareModal() {
+            shareModal.style.display = 'none';
+        }
+
+        function shareToMessenger() {
+            const url = window.location.origin + window.location.pathname + '?view=true';
+            const messengerShareUrl = `https://www.messenger.com/t/?message=${encodeURIComponent("這是我的個人網站，歡迎瀏覽！\n" + url)}`;
+            window.open(messengerShareUrl, '_blank');
+        }
+
+        function shareToInstagram() {
+            const url = window.location.origin + window.location.pathname + '?view=true';
+            
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(url).then(() => {
+                    alert("網址已成功複製到剪貼簿。請在 Instagram 聊天中手動貼上！");
+                }).catch(err => {
+                    console.error('無法複製網址: ', err);
+                    alert("複製失敗，請手動複製以下網址到 Instagram：\n" + url);
+                });
+            } else {
+                alert("請手動複製以下網址到 Instagram：\n" + url);
+            }
+            closeShareModal();
+        }
+
+        function copyLink() {
+            const url = window.location.origin + window.location.pathname + '?view=true';
+            navigator.clipboard.writeText(url).then(() => {
+                alert("網址已成功複製！");
+                closeShareModal();
+            }).catch(err => {
+                console.error('無法複製網址: ', err);
+                alert("複製失敗，請手動複製網址：\n" + url);
+            });
+        }
+    </script>
+    <div id="react-root" style="margin-top:20px;"></div>
+</body>
+
+</html>
