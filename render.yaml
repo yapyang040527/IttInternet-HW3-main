@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 services:
   - type: web
     name: IttInternet-HW3
@@ -8,14 +7,9 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
-=======
-services:
-  - type: web
-    name: IttInternet-HW3
-    runtime: node
-    buildCommand: npm install && npm run build
-    startCommand: npm start
-    envVars:
-      - key: NODE_ENV
-        value: production
->>>>>>> c7b1a5ae741d08e68bf6bb9abc06aeab60905818
+      - key: CI
+        value: "false"
+      - key: GENERATE_SOURCEMAP
+        value: "false"
+      - key: DISABLE_ESLINT_PLUGIN
+        value: "true"
